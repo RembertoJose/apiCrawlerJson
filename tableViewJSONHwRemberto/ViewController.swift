@@ -32,8 +32,7 @@ class ViewController: UIViewController {
         let jsonResponse = try JSONSerialization.jsonObject(with: dataResponse, options: [])
         if let jsonDic = jsonResponse as? [String: Any] {
           self.dict = jsonDic
-        }
-        else if let jsonArray = jsonResponse as? [String] {
+        } else if let jsonArray = jsonResponse as? [String] {
           self.arr = jsonArray
         } else {
           print("something went wrong")
@@ -70,37 +69,33 @@ extension ViewController: UITableViewDataSource {
     self.sortKeys = self.dict.keys.sorted()
     
     if self.arr.isEmpty {
+      
       let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
       let key = self.sortKeys[indexPath.row]
       cell.textLabel?.text = key
-      if let value = self.dict[sortKeys[indexPath.row]] {
+      
+      if let value = self.dict[key] {
         if value is Int {
           cell.detailTextLabel?.text = "\(value)"
-        }
-        else if value is String {
+        } else if value is String {
           cell.detailTextLabel?.text = "\(value)"
-        }
-        else if value is NSNull {
+        } else if value is NSNull {
           cell.detailTextLabel?.text = "NULL Value"
-        }
-        else if value is [Any] {
+        } else if value is [Any] {
           if let val = value as? [Any] {
             cell.detailTextLabel?.text = "Total Array: \(val.count)"
           }
-        }
-        else if value is [String:Any] {
+        } else if value is [String:Any] {
           if let val = value as? [String:Any] {
             cell.detailTextLabel?.text = "Total Dictionaries: \(val.count)"
           }
-        }
-        else if value is Bool {
+        } else if value is Bool {
           if let val = value as? Bool {
             cell.detailTextLabel?.text = "\(val)"
           }
         }
       }
       return cell
-      
     } else {
       let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
       cell.textLabel?.text = "Index[\(indexPath.row)]"
@@ -124,15 +119,13 @@ extension ViewController: UITableViewDelegate {
             navigationController?.pushViewController(viewController, animated: true)
           }
         }
-      }
-      else if value is [Any] {
+      } else if value is [Any] {
         if let val = value as? [Any] {
           viewController.arr = val
           viewController.nextApi = nil
           navigationController?.pushViewController(viewController, animated: true)
         }
-      }
-      else if value is [String:Any] {
+      } else if value is [String:Any] {
         if let val = value as? [String: Any] {
           viewController.dict = val
           viewController.sortKeys = self.dict.keys.sorted()
