@@ -32,10 +32,9 @@ class ViewController: UIViewController {
         let jsonResponse = try JSONSerialization.jsonObject(with: dataResponse, options: [])
         if let jsonDic = jsonResponse as? [String: Any] {
           self.dict = jsonDic
-          print("got dictionary")
-        } else if let jsonArray = jsonResponse as? [String] {
+        }
+        else if let jsonArray = jsonResponse as? [String] {
           self.arr = jsonArray
-          print("got array")
         } else {
           print("something went wrong")
         }
@@ -67,7 +66,9 @@ extension ViewController: UITableViewDataSource {
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    
     self.sortKeys = self.dict.keys.sorted()
+    
     if self.arr.isEmpty {
       let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
       let key = self.sortKeys[indexPath.row]
@@ -92,6 +93,11 @@ extension ViewController: UITableViewDataSource {
             cell.detailTextLabel?.text = "Total Dictionaries: \(val.count)"
           }
         }
+        else if value is Bool {
+          if let val = value as? Bool {
+            cell.detailTextLabel?.text = "\(val)"
+          }
+        }
       }
       return cell
       
@@ -105,15 +111,16 @@ extension ViewController: UITableViewDataSource {
 
 extension ViewController: UITableViewDelegate {
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    
     let storyboard = UIStoryboard(name: "Main", bundle: .main)
     let viewController = storyboard.instantiateViewController(identifier: "next") as! ViewController
+    
     if arr.isEmpty {
       let value = self.dict[sortKeys[indexPath.row]]
       if value is String {
         if let val = value as? String {
           if val.starts(with: "https") {
             viewController.nextApi = val
-            print(viewController.nextApi)
             navigationController?.pushViewController(viewController, animated: true)
           }
         }
